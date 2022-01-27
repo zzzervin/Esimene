@@ -1,101 +1,65 @@
-using System;
-using System.IO;
+from tkinter import *
 
-namespace EpicBattle
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            //string[] heroes = {"Harry Potter", "SuperMan", "Luke Skywalker", "Lara Croft"};
-            //string[] villains = {"Voldemort", "Joker", "Venom", "Darth Vader", "Cruella"};
-            string folderPath = @"C:\Users\opilane\Samples\";
-            string[] heroes = GetDataFromFile(folderPath + "heroes.txt");
-            string[] villains = GetDataFromFile(folderPath + "villains.txt");
-            string[] heroesweapon = GetDataFromFile(folderPath + "heroesweapon.txt");
-            string[] villainsweapon = GetDataFromFile(folderPath + "villainsweapon.txt");
-            string[] armor = GetDataFromFile(folderPath + "armor.txt");
+def txt_to_lbl(event):
+    t=Arv1.get()
+    TX2.configure(text=t)
 
-            string randomHero = GetRandomElement(heroes);
-            string randomvillain = GetRandomElement(villains);
+def discriminant(event):
+    a=0
+    b=0
+    c=0
+    a=float(Arv1.get())
+    b=float(Arv2.get())
+    c=float(Arv3.get())
+    if a>0:
+        D=b**2-4*a*c
+        TX2.configure(text=f"D={D}")
+        if D>0:
+            X1=(-b+D**0.5)/(2*a)
+            X2=(-b-D**0.5)/(2*a)
+            TX2.configure(text=f"D={D}\n x1={X1}\n x2={X2}")
+        elif D==0:
+            X1=-b/(2*a)
+            TX2.configure(text=f"1 корня={D}\n x1,2={X1}")
+        elif D<0:
+            TX2.configure(text=f"корня нет={D}")
+    else:
+         TX2.configure(text="ошибка")
 
-            string Hweapon = GetRandomElement(heroesweapon);
-            string Vweapon = GetRandomElement(villainsweapon);
-
-            string heroarmor = GetRandomElement(armor);
-            string villainarmor = GetRandomElement(armor);
 
 
+akkan=Tk()# главное окно приложения
+akkan.title("Kвадратного уравнения")
+akkan.geometry("700x300")
 
-            int heroHP = GenerateHP(heroarmor);
-            int villainHP = GenerateHP(villainarmor);
+TX=Label(akkan,text="Решение квадратного уравнения",height=1,font="Arial 20",bg="lightblue",fg="green")
+TX2=Label(akkan,text="Решение\n",height=4,width=60,font="Arial 10",bg="yellow")
+TX3=Label(akkan,text="x**2+",font="Arial 20",fg="green")
+TX4=Label(akkan,text="x+",font="Arial 20",fg="green")
+TX5=Label(akkan,text="=0",font="Arial 20",fg="green")
 
-            Console.WriteLine($"Your random  hero is: {randomHero} in {heroarmor}");
-            Console.WriteLine($"Your random  villains is: {randomvillain} in {villainarmor}");
-            Console.WriteLine($"{randomHero} with {Hweapon} will fight {randomvillain} with {Vweapon}");
-            Console.WriteLine($"{randomvillain} HP: {villainHP}");
-            Console.WriteLine($"{randomHero} HP: {heroHP}");
 
-            while (heroHP >= 0 && villainHP >= 0)
-            {
-                heroHP = heroHP - Hit(randomvillain, Vweapon);
-                villainHP = villainHP - Hit(randomHero, Hweapon);
-            }
-            if (heroHP > villainHP)
-            {
-                Console.WriteLine($"{randomHero} saves the day!");
-            }
-            else if (heroHP < villainHP)
-            {
-                Console.WriteLine("Dark side wins!");
-            }
-            else
-            {
-                Console.WriteLine($"Someday {randomHero} shall fight {randomvillain} again!");
-            }
-        }
+Arv1=Entry(akkan,width=5,font="Arial 20",bg="lightblue",justify=CENTER)
+Arv2=Entry(akkan,width=5,font="Arial 20",bg="lightblue",justify=CENTER)
+Arv3=Entry(akkan,width=5,font="Arial 20",bg="lightblue",justify=CENTER)
 
-        public static string GetRandomElement(string[] someArray)
-        {
-            Random rnd = new Random();
-            int randomIndex = rnd.Next(0, someArray.Length);
-            string randomCharacter = someArray[randomIndex];
-            return randomCharacter;
-        }
+BT=Button(akkan,text="Решить",height=2,width=10,font="Arial 20",bg="green")
+BT.bind("<Button-1>",discriminant)
 
-        public static string[] GetDataFromFile(string filepath)
-        {
-            string[] datafromfile = File.ReadAllLines(filepath);
-            return datafromfile;
-        }
 
-        public static int GenerateHP(string armor)
-        {
-            int CharacterHP = armor.Length;
-            return CharacterHP;
 
-        }
+TX5.place(x=390,y=130)
+TX4.place(x=250,y=130)
+TX3.place(x=80,y=130)
+    #############
+TX2.place(x=150,y=230)
+TX.place(x=100,y=0)
 
-        public static int Hit(string character, string weapon)
-        {
-            Random rnd = new Random();
-            int strike = rnd.Next(0, weapon.Length - 2);
-            Console.WriteLine($"{character} hit {strike}!");
 
-            if (strike == weapon.Length - 2)
-            {
-                Console.WriteLine($"Awesome! {character} made a critical hit!");
-            }
-            else if (strike == 0)
-            {
-                Console.WriteLine($"Bad luck! {character} missed the target!");
-            }
 
-            return strike;
-        }
-    }
-}
+BT.place(x=440,y=100)
+Arv1.place(x=0,y=130)
+Arv2.place(x=160,y=130)
+Arv3.place(x=300,y=130)
 
-    
-
-    
+akkan.mainloop()
